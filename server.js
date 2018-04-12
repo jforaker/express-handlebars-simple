@@ -2,16 +2,9 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var compression = require('compression');
-var methodOverride = require('method-override');
-var session = require('express-session');
-var flash = require('express-flash');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-var dotenv = require('dotenv');
 var exphbs = require('express-handlebars');
-
-// Load environment variables from .env file
-dotenv.load();
 
 // Controllers
 var HomeController = require('./controllers/home');
@@ -36,21 +29,11 @@ var hbs = exphbs.create({
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 5000);
 app.use(compression());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator());
-app.use(methodOverride('_method'));
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true
-  })
-);
-app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', HomeController.index);
